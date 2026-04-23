@@ -1,4 +1,5 @@
 import { Answers } from "./types.js";
+import { AgentTarget, AGENT_META } from "./agents.js";
 
 const get = (a: Answers, id: string, fallback = ""): string => {
   const v = a[id];
@@ -9,14 +10,21 @@ const get = (a: Answers, id: string, fallback = ""): string => {
 };
 const bool = (a: Answers, id: string) => a[id] === true;
 
-export function generateClaudeMd(a: Answers): string {
+export function generateInstructions(
+  a: Answers,
+  target: AgentTarget
+): string {
   const name = get(a, "name", "this project");
   const tagline = get(a, "tagline");
+  const agentName = AGENT_META[target].name;
+
   const stackSummary = [
     get(a, "languagePref"),
     get(a, "frontendFramework"),
     get(a, "backendFramework"),
-    bool(a, "dbNeeded") ? `${get(a, "dbType")}${get(a, "orm") ? " + " + get(a, "orm") : ""}` : "",
+    bool(a, "dbNeeded")
+      ? `${get(a, "dbType")}${get(a, "orm") ? " + " + get(a, "orm") : ""}`
+      : "",
     get(a, "uiLibrary"),
     get(a, "styling"),
   ]
@@ -27,9 +35,12 @@ export function generateClaudeMd(a: Answers): string {
     ? `Scaffold the app with ${get(a, "frontendFramework") || "the chosen framework"}, wire up ${get(a, "dbType")} + ${get(a, "orm")}, and define the first schema.`
     : `Scaffold the app with ${get(a, "frontendFramework") || "the chosen framework"} and set up the basic project structure.`;
 
-  return `# CLAUDE.md
+  const header =
+    target === "universal"
+      ? `# AGENTS.md\n\nThis file guides AI coding agents working on **${name}**${tagline ? ` — ${tagline}` : ""}. It is vendor-neutral; any agent (Claude Code, Cursor, Windsurf, Copilot, Aider, etc.) should read it before writing code.`
+      : `# Instructions for ${agentName}\n\nThis file guides **${agentName}** working on **${name}**${tagline ? ` — ${tagline}` : ""}.`;
 
-This file guides AI coding agents (Claude Code, Cursor, etc.) working on **${name}**${tagline ? ` — ${tagline}` : ""}.
+  return `${header}
 
 ## Source of Truth
 
