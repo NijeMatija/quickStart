@@ -1,0 +1,42 @@
+{
+  "name": "quickstart-spec",
+  "version": "0.1.0",
+  "description": "Turn a product idea into an AI-agent-ready SPEC.md + CLAUDE.md in 5 minutes.",
+  "type": "module",
+  "bin": {
+    "quickstart": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "start": "node dist/cli.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "cli",
+    "spec",
+    "scaffold",
+    "ai",
+    "claude",
+    "cursor",
+    "prompt",
+    "product-spec"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "picocolors": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
