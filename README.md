@@ -1,99 +1,135 @@
-# quickStart
+<div align="center">
 
-Turn a product idea into an AI-agent-ready spec in 5 minutes.
+# ⚡ quickStart
 
-`quickstart` is an interactive CLI that asks ~30–70 smart, branching questions about your idea (name, audience, stack, data, features, design, deploy, ops) and writes:
+### Turn a product idea into an AI-agent-ready spec in 5 minutes.
 
-- **`SPEC.md`** — a structured product spec your AI coding agent reads to understand what to build.
-- **An instructions file** for the agent(s) you use — `CLAUDE.md`, `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md`, `CONVENTIONS.md`, or a vendor-neutral `AGENTS.md`.
+[![npm version](https://img.shields.io/npm/v/quickstart-spec.svg?style=flat-square&color=14b8a6)](https://www.npmjs.com/package/quickstart-spec)
+[![node](https://img.shields.io/node/v/quickstart-spec.svg?style=flat-square&color=14b8a6)](https://www.npmjs.com/package/quickstart-spec)
+[![license](https://img.shields.io/npm/l/quickstart-spec.svg?style=flat-square&color=14b8a6)](./LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Built for AI coding agents](https://img.shields.io/badge/built%20for-AI%20coding%20agents-9333ea?style=flat-square)](#which-agents-are-supported)
 
-Drop the folder into Claude Code, Cursor, Windsurf, Copilot, Aider, or any other AI coding tool and start building.
+**Interview → `SPEC.md` + agent instructions → hand it to your coding agent.**
 
-## Install
+[Quick start](#-quick-start) · [How it works](#-how-it-works) · [Output](#-output) · [FAQ](#-faq)
 
-```bash
-# One-off use (recommended)
-npx quickstart-spec
+</div>
 
-# Or install globally
-npm install -g quickstart-spec
-quickstart
+---
+
+## ✨ Why?
+
+Every new project starts the same way: you have a vague idea, you open an AI coding agent, and you spend the next 90 minutes ping-ponging about what stack to use, whether you need auth, what the core flows are — before a single file is written.
+
+**quickStart compresses that to a 5-minute interview.** You answer a branching set of questions. It writes a structured spec your agent reads *before* it writes code. Fewer hallucinations. Less rework. Actual focus.
+
+<div align="center">
+
+```
+  💡 idea  →  ❓ interview  →  📄 SPEC.md  →  🤖 your agent builds it
 ```
 
-## Usage
+</div>
+
+## 🚀 Quick start
 
 ```bash
 npx quickstart-spec
 ```
 
-You'll be asked:
+That's it. Answer the questions. Drop the folder into Claude Code, Cursor, Windsurf, Copilot, or Aider. Done.
 
-1. Where to write the output (default `./my-new-project`).
-2. Which AI coding agent(s) you'll use — choose one or more: Claude Code, Cursor, Windsurf, Copilot, Aider, or the vendor-neutral `AGENTS.md`.
-3. (Optional) Whether to pre-fill answers from a short description using Claude — see **Smart pre-fill** below.
-4. 10 short sections of branching questions:
-   1. **Identity** — name, tagline, audience, problem
-   2. **Users & Auth** — accounts, sign-in methods, roles, billing
-   3. **Platforms** — web / mobile / desktop / CLI / extension / API
-   4. **Stack** — language, frameworks, UI library, testing
-   5. **Data** — database, ORM, storage, search, caching
-   6. **Core Features** — top features, capability checklist
-   7. **Integrations** — LLM, payments, email, analytics, errors
-   8. **Design** — aesthetic, color, dark mode, iconography, i18n
-   9. **Deploy** — hosting, CI, environments, compliance
-   10. **Ops** — logging, monitoring, docs, rate limits
+## 🧠 How it works
 
-Irrelevant branches are skipped automatically (no DB questions if you said no database, no mobile questions if you said web-only, etc.).
+1. **Pick your agent(s).** Claude Code, Cursor, Windsurf, Copilot, Aider, or a vendor-neutral `AGENTS.md`. Select one or many.
+2. *(Optional)* **Smart pre-fill.** If `ANTHROPIC_API_KEY` is set, paste a 2–5 sentence description and Claude drafts the answers for you. You still step through each one — accept, edit, or override.
+3. **10-section interview.** Branching questions across Identity, Users & Auth, Platforms, Stack, Data, Core Features, Integrations, Design, Deploy, Ops. Irrelevant sections skip themselves (no DB questions if you said no database; no mobile questions if you said web-only).
+4. **Two files get written.** `SPEC.md` (the product spec) and one correctly-named instruction file per agent you selected.
 
-## Smart pre-fill (optional)
+## 📦 Output
 
-If `ANTHROPIC_API_KEY` is set in your environment, quickstart offers to pre-fill answers from a 2–5 sentence description of your project using Claude. You then step through the interview with each question pre-filled — accept, edit, or override as you go.
+A ready-to-commit folder:
+
+```
+my-new-project/
+├── SPEC.md                    # Structured product spec (the source of truth)
+├── CLAUDE.md                  # Claude Code instructions
+└── .cursorrules               # Cursor instructions
+```
+
+### `SPEC.md` contains
+
+- Overview · audience · problem · success metric
+- Approved **tech stack** and design decisions
+- Full **feature list** and primary user journey
+- **Suggested build order** that adapts to your answers (scaffold → DB → auth → features → deploy)
+- **Open Questions** — every "not decided" flagged for your agent to ask about
+
+### Which agents are supported?
+
+| Agent              | File written                         |
+| ------------------ | ------------------------------------ |
+| 🟣 Claude Code     | `CLAUDE.md`                          |
+| ⚫ Cursor          | `.cursorrules`                       |
+| 🌊 Windsurf        | `.windsurfrules`                     |
+| 🐙 GitHub Copilot  | `.github/copilot-instructions.md`    |
+| 🛠️ Aider           | `CONVENTIONS.md`                     |
+| 🌐 Universal       | `AGENTS.md` (vendor-neutral)         |
+
+## 🤖 Smart pre-fill (optional)
+
+Set `ANTHROPIC_API_KEY` in your environment and quickStart will offer to bootstrap the interview from a short paragraph:
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
 npx quickstart-spec
 ```
 
-Without the key set, quickstart runs in fully manual mode — nothing is sent anywhere.
+You describe your project in 2–5 sentences. Claude drafts answers for every question it can confidently answer. You step through each one with the draft as the default — accept, edit, or skip. Typically cuts interview time in half for a clear idea.
 
-## Output
+Without the key set, quickStart runs fully offline — nothing is sent anywhere.
 
-Example output when targeting Claude Code + Cursor:
-
-```
-my-new-project/
-  SPEC.md          # Human + agent readable product spec
-  CLAUDE.md        # Claude Code instructions
-  .cursorrules     # Cursor instructions
-```
-
-| Agent           | File written                        |
-| --------------- | ----------------------------------- |
-| Claude Code     | `CLAUDE.md`                         |
-| Cursor          | `.cursorrules`                      |
-| Windsurf        | `.windsurfrules`                    |
-| GitHub Copilot  | `.github/copilot-instructions.md`   |
-| Aider           | `CONVENTIONS.md`                    |
-| Universal       | `AGENTS.md`                         |
-
-### Next step
+## 🎯 Next step
 
 ```bash
 cd my-new-project
 claude            # or: cursor . / windsurf . / aider, etc.
 ```
 
-Your agent reads its instructions file, follows the pointer to `SPEC.md`, and starts scaffolding.
+Your agent reads its instruction file → follows the pointer to `SPEC.md` → starts scaffolding. First task usually comes from the "Suggested Build Order".
 
-## Development
+## ❓ FAQ
+
+**How long does it take?** 5–10 minutes depending on how many questions you skip. Smart pre-fill cuts it further.
+
+**Do I have to use Claude?** No. Smart pre-fill uses Claude, but the whole interview-and-write-spec flow is 100% offline and works with any agent. Pick whichever agent(s) in the multiselect and it writes the right file(s).
+
+**Can I re-run it on an existing project?** Yes. Point it at the folder and confirm the overwrite. The `Appendix — Raw Answers` in `SPEC.md` stores your previous answers as JSON for reference.
+
+**Can I customize the questions?** Fork the repo and edit `src/questions.ts`. It's a plain array of 100 objects with conditional `skipIf` predicates — easy to extend.
+
+**Does it work on Windows?** Yes. Built on Node 18+; tested on Windows, macOS, and Linux.
+
+## 🛠️ Development
 
 ```bash
+git clone https://github.com/NijeMatija/quickStart.git
+cd quickStart
 npm install
 npm run dev       # run locally with tsx (no build)
 npm run build     # compile TypeScript to dist/
 npm start         # run the built CLI
 ```
 
-## License
+## 📜 License
 
-MIT
+MIT — do whatever you want. Attribution appreciated but not required.
+
+---
+
+<div align="center">
+
+Built with ❤️ and [Claude](https://www.anthropic.com/claude). If this saved you time, a ⭐ on GitHub would mean a lot.
+
+</div>
