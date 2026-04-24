@@ -10,6 +10,7 @@ import {
   unlinkSync,
 } from "fs";
 import { join, resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 import { questions } from "./questions.js";
 import { runQuestions, ProgressSnapshot } from "./engine.js";
 import { generateSpec } from "./spec.js";
@@ -18,6 +19,76 @@ import { AGENT_META, AGENT_OPTIONS, AgentTarget } from "./agents.js";
 import { smartFill, SmartFillError } from "./smart.js";
 import { Answers } from "./types.js";
 import { Depth, DEPTH_OPTIONS, filterByDepth } from "./depth.js";
+
+// Read version from package.json at runtime so the banner stays in sync
+// with whatever npm actually installed.
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const VERSION: string = (() => {
+  try {
+    const pkg = JSON.parse(
+      readFileSync(join(__dirname, "..", "package.json"), "utf8")
+    );
+    return pkg.version ?? "";
+  } catch {
+    return "";
+  }
+})();
+
+// ASCII banner shown at the start of every run. Uses "ANSI Shadow" style
+// block characters for the wordmark + a lightning tagline below. Width is
+// ~82 chars — fits modern terminals comfortably; narrow terminals (<82
+// cols) will fall back to a simpler banner.
+function renderBanner() {
+  const narrow = (process.stdout.columns ?? 80) < 82;
+
+  if (narrow) {
+    // Compact fallback for small terminals.
+    console.log();
+    console.log(
+      "  " +
+        color.yellow("⚡ ") +
+        color.bold(color.cyan("quickStart")) +
+        "  " +
+        color.dim(VERSION ? `v${VERSION}` : "")
+    );
+    console.log("  " + color.dim("─".repeat(40)));
+    console.log(
+      "  " + color.dim("Turn your idea into a SPEC your AI")
+    );
+    console.log(
+      "  " + color.dim("coding agent can ship — in 5 minutes.")
+    );
+    console.log();
+    return;
+  }
+
+  const wordmark = [
+    " ██████╗ ██╗   ██╗██╗ ██████╗██╗  ██╗███████╗████████╗ █████╗ ██████╗ ████████╗",
+    "██╔═══██╗██║   ██║██║██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝",
+    "██║   ██║██║   ██║██║██║     █████╔╝ ███████╗   ██║   ███████║██████╔╝   ██║   ",
+    "██║▄▄ ██║██║   ██║██║██║     ██╔═██╗ ╚════██║   ██║   ██╔══██║██╔══██╗   ██║   ",
+    "╚██████╔╝╚██████╔╝██║╚██████╗██║  ██╗███████║   ██║   ██║  ██║██║  ██║   ██║   ",
+    " ╚══▀▀═╝  ╚═════╝ ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ",
+  ].map((line) => color.cyan(line));
+
+  const tagline =
+    "   " +
+    color.yellow("⚡  ") +
+    color.dim("Turn your idea into a SPEC your AI coding agent can ship.");
+  const versionLine = VERSION
+    ? "   " +
+      color.dim("    npx quickstart-ai") +
+      color.dim("  ·  ") +
+      color.cyan(`v${VERSION}`)
+    : "";
+
+  console.log();
+  console.log(wordmark.join("\n"));
+  console.log();
+  console.log(tagline);
+  if (versionLine) console.log(versionLine);
+  console.log();
+}
 
 const PROGRESS_FILE = join(process.cwd(), ".quickstart-progress.json");
 
@@ -66,7 +137,7 @@ function writeProgress(snapshot: SavedSession) {
 
 async function main() {
   console.clear();
-  p.intro(color.bgCyan(color.black(" quickStart ")));
+  renderBanner();
 
   p.note(
     [
