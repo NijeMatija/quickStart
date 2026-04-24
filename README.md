@@ -4,7 +4,8 @@
 
 ### Turn a product idea into an AI-agent-ready spec in 5 minutes.
 
-[![GitHub stars](https://img.shields.io/github/stars/NijeMatija/quickStart?style=flat-square&color=14b8a6)](https://github.com/NijeMatija/quickStart/stargazers)
+[![npm version](https://img.shields.io/npm/v/quickstart-ai.svg?style=flat-square&color=14b8a6)](https://www.npmjs.com/package/quickstart-ai)
+[![npm downloads](https://img.shields.io/npm/dw/quickstart-ai.svg?style=flat-square&color=14b8a6)](https://www.npmjs.com/package/quickstart-ai)
 [![node](https://img.shields.io/badge/node-%E2%89%A518-14b8a6?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![license](https://img.shields.io/github/license/NijeMatija/quickStart?style=flat-square&color=14b8a6)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
