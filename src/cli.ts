@@ -20,6 +20,12 @@ async function main() {
       "Answer a short, branching interview about your idea.",
       "Irrelevant sections skip themselves.",
       "",
+      color.dim("Made a mistake? Pick ") +
+        color.cyan("← Go back") +
+        color.dim(" on any list, or type ") +
+        color.cyan("/back") +
+        color.dim(" in a text field."),
+      "",
       color.bold("Output: ") +
         "SPEC.md + an agent instructions file — drop them in a repo",
       "and point your AI coding agent at the folder.",

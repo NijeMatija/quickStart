@@ -87,11 +87,51 @@ export const questions: Question[] = [
     type: "select",
     label: "License?",
     options: [
-      { value: "MIT", label: "MIT" },
-      { value: "Apache-2.0", label: "Apache 2.0" },
-      { value: "GPL-3.0", label: "GPL 3.0" },
-      { value: "proprietary", label: "Proprietary / closed-source" },
-      { value: "undecided", label: "Undecided" },
+      {
+        value: "MIT",
+        label: "MIT",
+        hint: "Permissive. Do anything, just keep the copyright notice. Most popular for OSS.",
+      },
+      {
+        value: "Apache-2.0",
+        label: "Apache 2.0",
+        hint: "Permissive + explicit patent grant. Preferred by many enterprises.",
+      },
+      {
+        value: "BSD-3-Clause",
+        label: "BSD 3-Clause",
+        hint: "Permissive, similar to MIT but with a no-endorsement clause.",
+      },
+      {
+        value: "GPL-3.0",
+        label: "GPL 3.0",
+        hint: "Copyleft. Anything built on top must also be GPL-3.0-licensed.",
+      },
+      {
+        value: "AGPL-3.0",
+        label: "AGPL 3.0",
+        hint: "Strong copyleft. Even network/SaaS use counts as distribution.",
+      },
+      {
+        value: "MPL-2.0",
+        label: "MPL 2.0",
+        hint: "Weak copyleft. File-level — only modified files must stay open.",
+      },
+      {
+        value: "Unlicense",
+        label: "Unlicense / public domain",
+        hint: "No restrictions, no attribution required. Effectively public domain.",
+      },
+      {
+        value: "proprietary",
+        label: "Proprietary / closed-source",
+        hint: "All rights reserved. No OSS license — the default for most commercial apps.",
+      },
+      {
+        value: "undecided",
+        label: "Undecided",
+        hint: "Flag it as an open question. Agent will ask before committing.",
+      },
     ],
     defaultValue: "proprietary",
   },
