@@ -27,7 +27,7 @@ Enter
 Sleep 300ms
 Show
 
-Type "npx quickstart-spec"
+Type "npx quickstart-ai"
 Enter
 Sleep 2500ms
 

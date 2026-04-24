@@ -40,7 +40,7 @@ Every new project starts the same way: you have a vague idea, you open an AI cod
 ## 🚀 Quick start
 
 ```bash
-npx quickstart-spec
+npx quickstart-ai
 ```
 
 That's it. Answer the questions. Drop the folder into Claude Code, Cursor, Windsurf, Copilot, or Aider. Done.
@@ -88,7 +88,7 @@ Set `ANTHROPIC_API_KEY` in your environment and quickStart will offer to bootstr
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
-npx quickstart-spec
+npx quickstart-ai
 ```
 
 You describe your project in 2–5 sentences. Claude drafts answers for every question it can confidently answer. You step through each one with the draft as the default — accept, edit, or skip. Typically cuts interview time in half for a clear idea.

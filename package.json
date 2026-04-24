@@ -1,5 +1,5 @@
 {
-  "name": "quickstart-spec",
+  "name": "quickstart-ai",
   "version": "0.1.0",
   "description": "Turn a product idea into an AI-agent-ready SPEC.md + CLAUDE.md in 5 minutes.",
   "type": "module",
