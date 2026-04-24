@@ -9,6 +9,7 @@
 [![license](https://img.shields.io/npm/l/quickstart-spec.svg?style=flat-square&color=14b8a6)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Built for AI coding agents](https://img.shields.io/badge/built%20for-AI%20coding%20agents-9333ea?style=flat-square)](#which-agents-are-supported)
+[![Buy Me A Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-ffdd00?style=flat-square&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/NijeMatija)
 
 **Interview → `SPEC.md` + agent instructions → hand it to your coding agent.**
 
@@ -130,6 +131,9 @@ MIT — do whatever you want. Attribution appreciated but not required.
 
 <div align="center">
 
-Built with ❤️ and [Claude](https://www.anthropic.com/claude). If this saved you time, a ⭐ on GitHub would mean a lot.
+Built with ❤️ and [Claude](https://www.anthropic.com/claude).
+
+If this saved you time, a ⭐ on GitHub would mean a lot —
+and if it saved you a *lot* of time, you can [☕ buy me a coffee](https://www.buymeacoffee.com/NijeMatija).
 
 </div>
