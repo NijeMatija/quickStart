@@ -4,7 +4,7 @@
   "description": "Turn a product idea into an AI-agent-ready SPEC.md + CLAUDE.md in 5 minutes.",
   "type": "module",
   "bin": {
-    "quickstart": "./dist/cli.js"
+    "quickstart": "dist/cli.js"
   },
   "files": [
     "dist",
