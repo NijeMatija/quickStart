@@ -43,12 +43,6 @@ export async function runQuestions(
   let index = resumeState ? resumeState.index : 0;
   let currentCategory = "";
   let askedCount = askedStack.length;
-  // Suppress multiselect tip if a multiselect was already answered
-  // in a prior session (resume) — the user's seen it.
-  let shownMultiselectTip = askedStack.some((id) => {
-    const q = questions.find((qq) => qq.id === id);
-    return q?.type === "multiselect";
-  });
 
   while (index < questions.length) {
     const q = questions[index];
@@ -65,22 +59,6 @@ export async function runQuestions(
         color.dim(`Section ${sectionIndex}/${categories.length}`),
         color.cyan(currentCategory)
       );
-    }
-
-    if (q.type === "multiselect" && !shownMultiselectTip) {
-      p.note(
-        [
-          "Use " + color.cyan("↑ ↓") + " to move between options.",
-          "Press " + color.cyan("space") + " to toggle each one you want.",
-          "Press " + color.cyan("enter") + " to confirm your selection.",
-          "",
-          color.dim("Pick ") +
-            color.cyan("+ Add custom…") +
-            color.dim(" to type your own entries if none of the options fit."),
-        ].join("\n"),
-        color.dim("Multi-select tip")
-      );
-      shownMultiselectTip = true;
     }
 
     // Progress estimate. Count remaining questions not currently skipped by
@@ -214,21 +192,61 @@ function augmentOptions(q: Question, canGoBack: boolean) {
   return canGoBack ? [...withCustom, backOption] : withCustom;
 }
 
-function progressPrefix(progress: Progress): string {
-  return color.dim(`Q${progress.current}/~${progress.total}`) + "  ";
+function progressBar(current: number, total: number): string {
+  const width = 12;
+  const pct = Math.min(1, current / Math.max(1, total));
+  const filled = Math.min(width, Math.max(0, Math.round(pct * width)));
+  return (
+    color.cyan("█".repeat(filled)) + color.dim("░".repeat(width - filled))
+  );
+}
+
+// Control hints shown on a second line under every prompt so users don't have
+// to remember (or scroll back to) a one-time tip.
+function controlsFor(
+  kind: "text" | "confirm-plain" | "select" | "multiselect",
+  canGoBack: boolean
+): string {
+  const back = canGoBack
+    ? " · " + color.cyan("/back") + " revise last answer"
+    : "";
+  switch (kind) {
+    case "text":
+      return color.cyan("↵") + " submit" + back;
+    case "confirm-plain":
+      return color.cyan("← →") + " change · " + color.cyan("↵") + " submit";
+    case "select":
+      // canGoBack adds the "← Go back" option visibly, no /back text here.
+      return color.cyan("↑↓") + " move · " + color.cyan("↵") + " select";
+    case "multiselect":
+      return (
+        color.cyan("↑↓") +
+        " move · " +
+        color.cyan("space") +
+        " toggle · " +
+        color.cyan("a") +
+        " toggle all · " +
+        color.cyan("↵") +
+        " confirm"
+      );
+  }
+}
+
+function buildMessage(
+  label: string,
+  progress: Progress,
+  controls: string
+): string {
+  const bar = progressBar(progress.current, progress.total);
+  const counter = color.dim(`Q${progress.current}/~${progress.total}`);
+  return `${bar}  ${counter}  ${label}\n${color.dim(controls)}`;
 }
 
 const ask: Ask = async (q, preset, canGoBack, progress) => {
-  const prefix = progressPrefix(progress);
   switch (q.type) {
     case "text":
       return p.text({
-        message:
-          prefix +
-          q.label +
-          (canGoBack
-            ? "  " + color.dim("(type /back to revise the previous answer)")
-            : ""),
+        message: buildMessage(q.label, progress, controlsFor("text", canGoBack)),
         placeholder: q.placeholder,
         initialValue:
           (preset as string | undefined) ??
@@ -253,7 +271,7 @@ const ask: Ask = async (q, preset, canGoBack, progress) => {
                 ? "no"
                 : "yes";
         const choice = await p.select({
-          message: prefix + q.label,
+          message: buildMessage(q.label, progress, controlsFor("select", canGoBack)),
           options: [
             { value: "yes", label: "Yes" },
             { value: "no", label: "No" },
@@ -266,7 +284,11 @@ const ask: Ask = async (q, preset, canGoBack, progress) => {
         return choice === "yes";
       }
       return p.confirm({
-        message: prefix + q.label,
+        message: buildMessage(
+          q.label,
+          progress,
+          controlsFor("confirm-plain", canGoBack)
+        ),
         initialValue:
           (preset as boolean | undefined) ??
           (q.defaultValue as boolean | undefined) ??
@@ -276,7 +298,7 @@ const ask: Ask = async (q, preset, canGoBack, progress) => {
 
     case "select":
       return p.select({
-        message: prefix + q.label,
+        message: buildMessage(q.label, progress, controlsFor("select", canGoBack)),
         options: augmentOptions(q, canGoBack),
         initialValue:
           (preset as string | undefined) ??
@@ -285,7 +307,11 @@ const ask: Ask = async (q, preset, canGoBack, progress) => {
 
     case "multiselect":
       return p.multiselect({
-        message: prefix + q.label,
+        message: buildMessage(
+          q.label,
+          progress,
+          controlsFor("multiselect", canGoBack)
+        ),
         options: augmentOptions(q, canGoBack),
         initialValues:
           (preset as string[] | undefined) ??
