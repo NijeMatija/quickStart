@@ -18,6 +18,11 @@ export interface Question {
   defaultValue?: unknown;
   placeholder?: string;
   required?: boolean;
+  /**
+   * For multiselect (default: true) / select (default: false): append a
+   * "+ Add custom..." option that prompts for free-text values to include.
+   */
+  allowCustom?: boolean;
   skipIf?: (answers: Answers) => boolean;
   validate?: (value: string) => string | undefined;
 }
