@@ -270,6 +270,7 @@ export const questions: Question[] = [
       { value: "api-only", label: "API only (no UI)" },
     ],
     defaultValue: ["web"],
+    allowCustom: false,
   },
   {
     id: "primaryPlatform",
@@ -841,6 +842,7 @@ export const questions: Question[] = [
       { value: "outgoing", label: "Send webhooks to users" },
     ],
     defaultValue: [],
+    allowCustom: false,
   },
   {
     id: "otherApis",

@@ -10,18 +10,45 @@ const CUSTOM = "__custom__";
 const customAllowed = (q: Question): boolean =>
   q.allowCustom ?? q.type === "multiselect";
 
+export interface ProgressSnapshot {
+  answers: Answers;
+  askedStack: string[];
+  index: number;
+}
+
+export interface RunQuestionsOptions {
+  defaults?: Answers;
+  resumeState?: ProgressSnapshot;
+  onProgress?: (snapshot: ProgressSnapshot) => void;
+}
+
+interface Progress {
+  current: number;
+  total: number;
+}
+
 export async function runQuestions(
   questions: Question[],
-  defaults: Answers = {}
+  opts: RunQuestionsOptions = {}
 ): Promise<Answers> {
-  const answers: Answers = { ...defaults };
-  const askedStack: string[] = []; // ids of questions actually asked, in order
+  const { defaults = {}, resumeState, onProgress } = opts;
+
+  const answers: Answers = resumeState
+    ? { ...resumeState.answers }
+    : { ...defaults };
+  const askedStack: string[] = resumeState ? [...resumeState.askedStack] : [];
+
   const categories = Array.from(new Set(questions.map((q) => q.category)));
 
-  let index = 0;
+  let index = resumeState ? resumeState.index : 0;
   let currentCategory = "";
-  let askedCount = 0;
-  let shownMultiselectTip = false;
+  let askedCount = askedStack.length;
+  // Suppress multiselect tip if a multiselect was already answered
+  // in a prior session (resume) — the user's seen it.
+  let shownMultiselectTip = askedStack.some((id) => {
+    const q = questions.find((qq) => qq.id === id);
+    return q?.type === "multiselect";
+  });
 
   while (index < questions.length) {
     const q = questions[index];
@@ -56,14 +83,30 @@ export async function runQuestions(
       shownMultiselectTip = true;
     }
 
+    // Progress estimate. Count remaining questions not currently skipped by
+    // answers so far; user choices downstream can still change these.
+    let remaining = 0;
+    for (let i = index; i < questions.length; i++) {
+      if (!questions[i].skipIf?.(answers)) remaining++;
+    }
+    const progress: Progress = {
+      current: askedCount + 1,
+      total: askedCount + remaining,
+    };
+
     const canGoBack = askedStack.length > 0;
     const preset = defaults[q.id];
     const hasPreset = preset !== undefined && preset !== null && preset !== "";
 
-    const value = await ask(q, hasPreset ? preset : undefined, canGoBack);
+    const value = await ask(
+      q,
+      hasPreset ? preset : undefined,
+      canGoBack,
+      progress
+    );
 
     if (p.isCancel(value)) {
-      p.cancel("Cancelled. No files written.");
+      p.cancel("Cancelled. Progress saved — rerun to resume.");
       process.exit(0);
     }
 
@@ -80,23 +123,28 @@ export async function runQuestions(
         askedCount = Math.max(0, askedCount - 1);
         index = questions.findIndex((qq) => qq.id === lastId);
       }
+      onProgress?.({ answers, askedStack, index });
       continue;
     }
 
     // Custom handling — expand the sentinel into user-typed values.
     let finalValue: unknown = value;
 
-    if (q.type === "multiselect" && Array.isArray(value) && value.includes(CUSTOM)) {
+    if (
+      q.type === "multiselect" &&
+      Array.isArray(value) &&
+      value.includes(CUSTOM)
+    ) {
       const typed = await promptForCustomList(q);
       if (p.isCancel(typed)) {
-        p.cancel("Cancelled. No files written.");
+        p.cancel("Cancelled. Progress saved — rerun to resume.");
         process.exit(0);
       }
       finalValue = [...value.filter((v) => v !== CUSTOM), ...typed];
     } else if (q.type === "select" && value === CUSTOM) {
       const typed = await promptForCustomSingle(q);
       if (p.isCancel(typed)) {
-        p.cancel("Cancelled. No files written.");
+        p.cancel("Cancelled. Progress saved — rerun to resume.");
         process.exit(0);
       }
       finalValue = typed;
@@ -106,6 +154,8 @@ export async function runQuestions(
     askedStack.push(q.id);
     askedCount++;
     index++;
+
+    onProgress?.({ answers, askedStack, index });
   }
 
   p.note(color.dim(`${askedCount} questions answered`), "Done");
@@ -117,7 +167,9 @@ async function promptForCustomList(q: Question): Promise<string[] | symbol> {
     message: `Add custom entries for "${q.label}"`,
     placeholder: "Comma-separated. e.g. discord, microsoft-teams",
     validate: (v) =>
-      v.trim().length === 0 ? "Type at least one value, or /skip to cancel." : undefined,
+      v.trim().length === 0
+        ? "Type at least one value, or /skip to cancel."
+        : undefined,
   });
   if (p.isCancel(raw)) return raw;
   const parts = (raw as string)
@@ -140,7 +192,8 @@ async function promptForCustomSingle(q: Question): Promise<string | symbol> {
 type Ask = (
   q: Question,
   preset: unknown,
-  canGoBack: boolean
+  canGoBack: boolean,
+  progress: Progress
 ) => Promise<unknown | symbol>;
 
 const backOption = {
@@ -161,11 +214,17 @@ function augmentOptions(q: Question, canGoBack: boolean) {
   return canGoBack ? [...withCustom, backOption] : withCustom;
 }
 
-const ask: Ask = async (q, preset, canGoBack) => {
+function progressPrefix(progress: Progress): string {
+  return color.dim(`Q${progress.current}/~${progress.total}`) + "  ";
+}
+
+const ask: Ask = async (q, preset, canGoBack, progress) => {
+  const prefix = progressPrefix(progress);
   switch (q.type) {
     case "text":
       return p.text({
         message:
+          prefix +
           q.label +
           (canGoBack
             ? "  " + color.dim("(type /back to revise the previous answer)")
@@ -194,7 +253,7 @@ const ask: Ask = async (q, preset, canGoBack) => {
                 ? "no"
                 : "yes";
         const choice = await p.select({
-          message: q.label,
+          message: prefix + q.label,
           options: [
             { value: "yes", label: "Yes" },
             { value: "no", label: "No" },
@@ -207,7 +266,7 @@ const ask: Ask = async (q, preset, canGoBack) => {
         return choice === "yes";
       }
       return p.confirm({
-        message: q.label,
+        message: prefix + q.label,
         initialValue:
           (preset as boolean | undefined) ??
           (q.defaultValue as boolean | undefined) ??
@@ -217,7 +276,7 @@ const ask: Ask = async (q, preset, canGoBack) => {
 
     case "select":
       return p.select({
-        message: q.label,
+        message: prefix + q.label,
         options: augmentOptions(q, canGoBack),
         initialValue:
           (preset as string | undefined) ??
@@ -226,7 +285,7 @@ const ask: Ask = async (q, preset, canGoBack) => {
 
     case "multiselect":
       return p.multiselect({
-        message: q.label,
+        message: prefix + q.label,
         options: augmentOptions(q, canGoBack),
         initialValues:
           (preset as string[] | undefined) ??
