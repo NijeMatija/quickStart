@@ -57,19 +57,28 @@
     <!-- ================= STAGE 2: banner reveal ================= -->
     <g class="stage stage-2">
       <text x="24" y="70" class="text dim">$ npx quickstart-ai</text>
-      <text x="24" y="108" class="text cyan"> ██████╗ ██╗   ██╗██╗ ██████╗██╗  ██╗███████╗████████╗ █████╗ ██████╗ ████████╗</text>
-      <text x="24" y="124" class="text cyan">██╔═══██╗██║   ██║██║██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝</text>
-      <text x="24" y="140" class="text cyan">██║   ██║██║   ██║██║██║     █████╔╝ ███████╗   ██║   ███████║██████╔╝   ██║   </text>
-      <text x="24" y="156" class="text cyan">██║▄▄ ██║██║   ██║██║██║     ██╔═██╗ ╚════██║   ██║   ██╔══██║██╔══██╗   ██║   </text>
-      <text x="24" y="172" class="text cyan">╚██████╔╝╚██████╔╝██║╚██████╗██║  ██╗███████║   ██║   ██║  ██║██║  ██║   ██║   </text>
-      <text x="24" y="188" class="text cyan"> ╚══▀▀═╝  ╚═════╝ ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   </text>
-      <text x="460" y="232" class="text yellow" text-anchor="middle">⚡ Turn your idea into a SPEC your AI coding agent can ship.</text>
-      <text x="460" y="256" class="text dim" text-anchor="middle">npx quickstart-ai  ·  v0.7.0</text>
 
-      <text x="24" y="320" class="text dim">◆  Section 1/4 — Setup</text>
-      <text x="24" y="346" class="text"><tspan class="cyan">██░░░░░░░░░░</tspan>  <tspan class="dim">Q1/~25</tspan>  Where should we save the spec?</text>
-      <text x="24" y="364" class="text dim">↵ submit</text>
-      <text x="24" y="392" class="text"><tspan class="cyan">›</tspan> ./recipe-app<tspan class="cursor">▋</tspan></text>
+      <!-- Wordmark with subtle drop-shadow for depth -->
+      <text x="464" y="178" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, sans-serif"
+            font-size="68" font-weight="900" letter-spacing="6"
+            text-anchor="middle" fill="#11111b">QUICKSTART</text>
+      <text x="460" y="174" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, sans-serif"
+            font-size="68" font-weight="900" letter-spacing="6"
+            text-anchor="middle" fill="#74c7ec">QUICKSTART</text>
+
+      <!-- ⚡ AI ⚡ accent -->
+      <text x="460" y="218" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, sans-serif"
+            font-size="22" font-weight="800" letter-spacing="14"
+            text-anchor="middle" fill="#a6e3a1">⚡  A I  ⚡</text>
+
+      <!-- Tagline -->
+      <text x="460" y="258" class="text yellow" text-anchor="middle">Turn your idea into a SPEC your AI coding agent can ship.</text>
+      <text x="460" y="282" class="text dim" text-anchor="middle">npx quickstart-ai  ·  v0.7.0</text>
+
+      <text x="24" y="338" class="text dim">◆  Section 1/4 — Setup</text>
+      <text x="24" y="364" class="text"><tspan class="cyan">██░░░░░░░░░░</tspan>  <tspan class="dim">Q1/~25</tspan>  Where should we save the spec?</text>
+      <text x="24" y="382" class="text dim">↵ submit</text>
+      <text x="24" y="410" class="text"><tspan class="cyan">›</tspan> ./recipe-app<tspan class="cursor">▋</tspan></text>
     </g>
 
     <!-- ================= STAGE 3: agent multiselect ================= -->
