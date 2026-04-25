@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 540" width="920" height="540" font-family="ui-monospace, 'Cascadia Code', 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace" xml:space="preserve">
+  <defs>
+    <clipPath id="screen">
+      <rect x="0" y="36" width="920" height="504" rx="0"/>
+    </clipPath>
+  </defs>
+
+  <style><![CDATA[
+    .term-bg    { fill: #11111b; }
+    .titlebar   { fill: #1e1e2e; }
+    .text       { font-size: 13px; fill: #cdd6f4; }
+    .small      { font-size: 12px; }
+    .dim        { fill: #6c7086; }
+    .cyan       { fill: #74c7ec; }
+    .yellow     { fill: #f9e2af; }
+    .green      { fill: #a6e3a1; }
+    .pink       { fill: #f5c2e7; }
+    .red        { fill: #f38ba8; }
+    .white      { fill: #cdd6f4; }
+
+    .stage      { opacity: 0; }
+    .stage-1    { animation: s1 16s linear infinite; }
+    .stage-2    { animation: s2 16s linear infinite; }
+    .stage-3    { animation: s3 16s linear infinite; }
+    .stage-4    { animation: s4 16s linear infinite; }
+
+    /* hard cuts between stages — feels like a terminal advancing */
+    @keyframes s1 { 0%, 23% { opacity: 1; } 25%, 100% { opacity: 0; } }
+    @keyframes s2 { 0%, 23% { opacity: 0; } 25%, 48% { opacity: 1; } 50%, 100% { opacity: 0; } }
+    @keyframes s3 { 0%, 48% { opacity: 0; } 50%, 73% { opacity: 1; } 75%, 100% { opacity: 0; } }
+    @keyframes s4 { 0%, 73% { opacity: 0; } 75%, 100% { opacity: 1; } }
+
+    .cursor     { animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* progressive type-in for stage 1 command */
+    .typed      { animation: type 1.6s steps(18, end) infinite; overflow: hidden; }
+  ]]></style>
+
+  <!-- window frame -->
+  <rect class="term-bg" width="920" height="540" rx="10"/>
+  <rect class="titlebar" width="920" height="36" rx="10"/>
+  <rect class="titlebar" width="920" height="20" y="16"/>
+  <circle cx="22" cy="18" r="6" fill="#f38ba8"/>
+  <circle cx="44" cy="18" r="6" fill="#f9e2af"/>
+  <circle cx="66" cy="18" r="6" fill="#a6e3a1"/>
+  <text x="460" y="22" class="text dim small" text-anchor="middle">quickstart-ai · npx demo</text>
+
+  <g clip-path="url(#screen)">
+
+    <!-- ================= STAGE 1: command typed ================= -->
+    <g class="stage stage-1">
+      <text x="24" y="80" class="text"><tspan class="green">$</tspan> npx quickstart-ai<tspan class="cursor">▋</tspan></text>
+    </g>
+
+    <!-- ================= STAGE 2: banner reveal ================= -->
+    <g class="stage stage-2">
+      <text x="24" y="70" class="text dim">$ npx quickstart-ai</text>
+      <text x="24" y="108" class="text cyan"> ██████╗ ██╗   ██╗██╗ ██████╗██╗  ██╗███████╗████████╗ █████╗ ██████╗ ████████╗</text>
+      <text x="24" y="124" class="text cyan">██╔═══██╗██║   ██║██║██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝</text>
+      <text x="24" y="140" class="text cyan">██║   ██║██║   ██║██║██║     █████╔╝ ███████╗   ██║   ███████║██████╔╝   ██║   </text>
+      <text x="24" y="156" class="text cyan">██║▄▄ ██║██║   ██║██║██║     ██╔═██╗ ╚════██║   ██║   ██╔══██║██╔══██╗   ██║   </text>
+      <text x="24" y="172" class="text cyan">╚██████╔╝╚██████╔╝██║╚██████╗██║  ██╗███████║   ██║   ██║  ██║██║  ██║   ██║   </text>
+      <text x="24" y="188" class="text cyan"> ╚══▀▀═╝  ╚═════╝ ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   </text>
+      <text x="460" y="232" class="text yellow" text-anchor="middle">⚡ Turn your idea into a SPEC your AI coding agent can ship.</text>
+      <text x="460" y="256" class="text dim" text-anchor="middle">npx quickstart-ai  ·  v0.7.0</text>
+
+      <text x="24" y="320" class="text dim">◆  Section 1/4 — Setup</text>
+      <text x="24" y="346" class="text"><tspan class="cyan">██░░░░░░░░░░</tspan>  <tspan class="dim">Q1/~25</tspan>  Where should we save the spec?</text>
+      <text x="24" y="364" class="text dim">↵ submit</text>
+      <text x="24" y="392" class="text"><tspan class="cyan">›</tspan> ./recipe-app<tspan class="cursor">▋</tspan></text>
+    </g>
+
+    <!-- ================= STAGE 3: agent multiselect ================= -->
+    <g class="stage stage-3">
+      <text x="24" y="70" class="text dim">◆  Section 2/4 — Agents</text>
+      <text x="24" y="96" class="text"><tspan class="cyan">█████░░░░░░░</tspan>  <tspan class="dim">Q3/~25</tspan>  Which AI agents will work on this project?</text>
+      <text x="24" y="114" class="text dim">↑↓ move · space toggle · a toggle all · ↵ confirm</text>
+
+      <text x="44" y="156" class="text"><tspan class="green">◼</tspan> claude        <tspan class="dim">→ CLAUDE.md</tspan></text>
+      <text x="44" y="178" class="text"><tspan class="green">◼</tspan> cursor        <tspan class="dim">→ .cursorrules</tspan></text>
+      <text x="44" y="200" class="text"><tspan class="green">◼</tspan> windsurf      <tspan class="dim">→ .windsurfrules</tspan></text>
+      <text x="44" y="222" class="text dim">◻ aider         → .aider.conf.yml</text>
+      <text x="44" y="244" class="text dim">◻ cline         → .clinerules</text>
+      <text x="44" y="266" class="text dim">◻ codex         → AGENTS.md</text>
+
+      <text x="24" y="320" class="text dim">◆  Section 3/4 — Depth</text>
+      <text x="24" y="346" class="text"><tspan class="cyan">████████░░░░</tspan>  <tspan class="dim">Q5/~25</tspan>  How deep should we go?</text>
+      <text x="44" y="378" class="text">  <tspan class="dim">○ Quick</tspan>     <tspan class="dim">~20 questions · 3 min</tspan></text>
+      <text x="44" y="398" class="text"><tspan class="cyan">▶ ● Standard</tspan>  <tspan class="dim">~50 questions · 10 min</tspan></text>
+      <text x="44" y="418" class="text">  <tspan class="dim">○ Deep</tspan>      <tspan class="dim">~100 questions · 25 min</tspan></text>
+    </g>
+
+    <!-- ================= STAGE 4: done + files ================= -->
+    <g class="stage stage-4">
+      <text x="24" y="70" class="text"><tspan class="green">✓</tspan> <tspan class="dim">25 questions answered</tspan>  ·  Done</text>
+
+      <text x="24" y="106" class="text dim">Wrote files to <tspan class="cyan">./recipe-app</tspan>:</text>
+      <text x="44" y="132" class="text"><tspan class="green">+</tspan> SPEC.md           <tspan class="dim">2.1 KB</tspan></text>
+      <text x="44" y="152" class="text"><tspan class="green">+</tspan> CLAUDE.md         <tspan class="dim">1.4 KB</tspan></text>
+      <text x="44" y="172" class="text"><tspan class="green">+</tspan> .cursorrules      <tspan class="dim">0.9 KB</tspan></text>
+      <text x="44" y="192" class="text"><tspan class="green">+</tspan> .windsurfrules    <tspan class="dim">0.9 KB</tspan></text>
+
+      <text x="24" y="232" class="text dim">─── CLAUDE.md ─────────────────────────────────────────────</text>
+      <text x="24" y="254" class="text"><tspan class="pink"># Project</tspan></text>
+      <text x="24" y="272" class="text">AI recipe generator — fridge photos in, dinner ideas out.</text>
+      <text x="24" y="292" class="text"><tspan class="pink">## Stack</tspan></text>
+      <text x="24" y="310" class="text">Next.js 14 · TypeScript · Postgres · OpenAI Vision</text>
+      <text x="24" y="330" class="text"><tspan class="pink">## Out of scope</tspan></text>
+      <text x="24" y="348" class="text">Native mobile, multi-language, payments (v2).</text>
+      <text x="24" y="368" class="text dim">─────────────────────────────────────────────────────────────</text>
+
+      <text x="24" y="412" class="text dim">Drop into your editor:</text>
+      <text x="24" y="436" class="text"><tspan class="green">$</tspan> cd recipe-app &amp;&amp; <tspan class="cyan">claude</tspan><tspan class="cursor">▋</tspan></text>
+    </g>
+
+  </g>
+</svg>
