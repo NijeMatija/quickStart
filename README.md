@@ -18,7 +18,7 @@
 
 <br />
 
-<img src="./docs/demo.gif" alt="quickStart demo" width="820" />
+<img src="./demo.svg" alt="quickStart demo" width="820" />
 
 </div>
 
