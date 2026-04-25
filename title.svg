@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 200" width="820" height="200"
+     font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, Roboto, sans-serif">
+  <style><![CDATA[
+    /* light mode (default) */
+    .wordmark { fill: #0891b2; }
+    .shadow   { fill: #e2e8f0; }
+    .accent   { fill: #15803d; }
+
+    /* dark mode — matches the demo SVG palette */
+    @media (prefers-color-scheme: dark) {
+      .wordmark { fill: #74c7ec; }
+      .shadow   { fill: #1e293b; }
+      .accent   { fill: #a6e3a1; }
+    }
+  ]]></style>
+
+  <!-- subtle drop-shadow layer (offset 4px right + down) -->
+  <text x="414" y="114"
+        font-size="76" font-weight="900" letter-spacing="6"
+        text-anchor="middle" class="shadow">QUICKSTART</text>
+
+  <!-- main wordmark -->
+  <text x="410" y="110"
+        font-size="76" font-weight="900" letter-spacing="6"
+        text-anchor="middle" class="wordmark">QUICKSTART</text>
+
+  <!-- ⚡ A I ⚡ accent -->
+  <text x="410" y="160"
+        font-size="22" font-weight="800" letter-spacing="14"
+        text-anchor="middle" class="accent">⚡  A I  ⚡</text>
+</svg>

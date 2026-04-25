@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ quickStart
+<img src="./title.svg" alt="quickStart" width="700" />
 
 ### Turn a product idea into an AI-agent-ready spec in 5 minutes.
 
