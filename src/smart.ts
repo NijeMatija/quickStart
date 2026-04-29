@@ -164,7 +164,9 @@ export async function smartFill(
       throw new SmartFillError("Invalid ANTHROPIC_API_KEY");
     }
     if (err instanceof Anthropic.RateLimitError) {
-      throw new SmartFillError("Rate-limited by Anthropic API — try again shortly");
+      throw new SmartFillError(
+        "Rate-limited by Anthropic API — try again shortly"
+      );
     }
     if (err instanceof Anthropic.APIConnectionError) {
       throw new SmartFillError("Network error talking to Anthropic API");
@@ -175,8 +177,7 @@ export async function smartFill(
   }
 
   const textBlock = message.content.find((b) => b.type === "text");
-  const rawText =
-    textBlock && textBlock.type === "text" ? textBlock.text : "";
+  const rawText = textBlock && textBlock.type === "text" ? textBlock.text : "";
   if (!rawText) throw new SmartFillError("Model returned no text content");
 
   const raw = extractJson(rawText);

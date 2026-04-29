@@ -1,4 +1,5 @@
 import { Answers } from "./types.js";
+import { estimateCosts, formatCostEstimate } from "./pricing.js";
 
 const get = (a: Answers, id: string, fallback = ""): string => {
   const v = a[id];
@@ -9,8 +10,6 @@ const get = (a: Answers, id: string, fallback = ""): string => {
 };
 
 const bool = (a: Answers, id: string) => a[id] === true;
-const listed = (a: Answers, id: string): string[] =>
-  Array.isArray(a[id]) ? (a[id] as string[]) : [];
 const skipped = (a: Answers, id: string) => !(id in a);
 
 const bullet = (label: string, value: string) =>
@@ -158,9 +157,7 @@ export function generateSpec(a: Answers): string {
       bullet("Accessibility target", get(a, "accessibility")),
       bullet(
         "Internationalization",
-        bool(a, "i18n")
-          ? `Yes${bool(a, "rtl") ? " (incl. RTL)" : ""}`
-          : "No"
+        bool(a, "i18n") ? `Yes${bool(a, "rtl") ? " (incl. RTL)" : ""}` : "No"
       ),
     ])
   );
@@ -196,6 +193,7 @@ export function generateSpec(a: Answers): string {
   );
 
   parts.push(buildOrder(a));
+  parts.push(formatCostEstimate(estimateCosts(a)));
   parts.push(openQuestions(a));
   parts.push(appendix(a));
 
@@ -258,14 +256,12 @@ function buildOrder(a: Answers): string {
     get(a, "errorTracking"),
   ].filter((v) => v && v !== "none");
   if (integ.length) {
-    steps.push(
-      `${n++}. **Integrations.** Wire up ${integ.join(", ")}.`
-    );
+    steps.push(`${n++}. **Integrations.** Wire up ${integ.join(", ")}.`);
   }
 
   if (bool(a, "marketingSite")) {
     steps.push(
-      `${n++}. **Marketing site.** Landing page, pricing${bool(a, "hasBilling") ? "" : ""}, signup CTA.`
+      `${n++}. **Marketing site.** Landing page${bool(a, "hasBilling") ? ", pricing" : ""}, signup CTA.`
     );
   }
 
@@ -277,12 +273,13 @@ function buildOrder(a: Answers): string {
   }
 
   if (get(a, "docs")) {
-    steps.push(
-      `${n++}. **Docs.** ${get(a, "docs")}.`
-    );
+    steps.push(`${n++}. **Docs.** ${get(a, "docs")}.`);
   }
 
-  return section("Suggested Build Order", steps.length ? [steps.join("\n")] : []);
+  return section(
+    "Suggested Build Order",
+    steps.length ? [steps.join("\n")] : []
+  );
 }
 
 function openQuestions(a: Answers): string {
@@ -290,7 +287,9 @@ function openQuestions(a: Answers): string {
   const check = (id: string, label: string) => {
     const v = a[id];
     if (v === "no-pref" || v === "undecided" || v === "later") {
-      qs.push(`- **${label}** — not decided. Agent should propose 1–2 options before implementing.`);
+      qs.push(
+        `- **${label}** — not decided. Agent should propose 1–2 options before implementing.`
+      );
     }
   };
   check("languagePref", "Language");
@@ -309,7 +308,9 @@ function openQuestions(a: Answers): string {
   check("logging", "Logging");
 
   if (skipped(a, "motivation") || !get(a, "motivation")) {
-    qs.push(`- **Motivation** — not captured. Optional context; skip unless user asks.`);
+    qs.push(
+      `- **Motivation** — not captured. Optional context; skip unless user asks.`
+    );
   }
 
   return section("Open Questions", qs);

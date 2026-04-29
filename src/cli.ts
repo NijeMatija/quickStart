@@ -19,6 +19,7 @@ import { AGENT_META, AGENT_OPTIONS, AgentTarget } from "./agents.js";
 import { smartFill, SmartFillError } from "./smart.js";
 import { Answers } from "./types.js";
 import { Depth, DEPTH_OPTIONS, filterByDepth } from "./depth.js";
+import { estimateCosts } from "./pricing.js";
 
 // Read version from package.json at runtime so the banner stays in sync
 // with whatever npm actually installed.
@@ -52,12 +53,8 @@ function renderBanner() {
         color.dim(VERSION ? `v${VERSION}` : "")
     );
     console.log("  " + color.dim("─".repeat(40)));
-    console.log(
-      "  " + color.dim("Turn your idea into a SPEC your AI")
-    );
-    console.log(
-      "  " + color.dim("coding agent can ship — in 5 minutes.")
-    );
+    console.log("  " + color.dim("Turn your idea into a SPEC your AI"));
+    console.log("  " + color.dim("coding agent can ship — in 5 minutes."));
     console.log();
     return;
   }
@@ -295,7 +292,9 @@ async function main() {
           );
         } catch (err) {
           const msg = err instanceof SmartFillError ? err.message : String(err);
-          s.stop(color.yellow(`Smart-fill failed: ${msg}. Continuing manually.`));
+          s.stop(
+            color.yellow(`Smart-fill failed: ${msg}. Continuing manually.`)
+          );
         }
       }
     } else {
@@ -304,7 +303,9 @@ async function main() {
           "Set " +
             color.cyan("ANTHROPIC_API_KEY") +
             " to enable Claude-powered pre-fill from a short description.",
-          color.dim("(Optional. You can always answer every question manually.)"),
+          color.dim(
+            "(Optional. You can always answer every question manually.)"
+          ),
         ].join("\n"),
         "Tip"
       );
@@ -356,12 +357,23 @@ async function main() {
   // Success — clear saved progress.
   deleteProgressFile();
 
+  const costs = estimateCosts(answers);
+  const costLine = costs.freeTierPossible
+    ? color.dim("Estimated infra cost: ") +
+      color.green("$0–$" + costs.maxTotal + "/mo") +
+      color.dim(" (all services have free tiers at MVP scale)")
+    : color.dim("Estimated infra cost: ") +
+      color.yellow("~$" + costs.minTotal + "–$" + costs.maxTotal + "/mo") +
+      color.dim(" at low traffic");
+
   p.outro(
     [
       color.green("Done!"),
       "",
       color.bold("Files written:"),
       ...writtenPaths.map((f) => `  ${color.dim("•")} ${f}`),
+      "",
+      costLine,
       "",
       color.bold("Next steps:"),
       `  ${color.dim("1.")} cd ${targetDirInput}`,

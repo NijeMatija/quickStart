@@ -196,9 +196,7 @@ function progressBar(current: number, total: number): string {
   const width = 12;
   const pct = Math.min(1, current / Math.max(1, total));
   const filled = Math.min(width, Math.max(0, Math.round(pct * width)));
-  return (
-    color.cyan("█".repeat(filled)) + color.dim("░".repeat(width - filled))
-  );
+  return color.cyan("█".repeat(filled)) + color.dim("░".repeat(width - filled));
 }
 
 // Control hints shown on a second line under every prompt so users don't have
@@ -246,14 +244,20 @@ const ask: Ask = async (q, preset, canGoBack, progress) => {
   switch (q.type) {
     case "text":
       return p.text({
-        message: buildMessage(q.label, progress, controlsFor("text", canGoBack)),
+        message: buildMessage(
+          q.label,
+          progress,
+          controlsFor("text", canGoBack)
+        ),
         placeholder: q.placeholder,
         initialValue:
           (preset as string | undefined) ??
           (q.defaultValue as string | undefined),
         validate: (v) => {
           if (v.trim() === "/back") {
-            return canGoBack ? undefined : "No previous question to go back to.";
+            return canGoBack
+              ? undefined
+              : "No previous question to go back to.";
           }
           if (q.required && !v.trim()) return "Required";
           return q.validate?.(v);
@@ -271,7 +275,11 @@ const ask: Ask = async (q, preset, canGoBack, progress) => {
                 ? "no"
                 : "yes";
         const choice = await p.select({
-          message: buildMessage(q.label, progress, controlsFor("select", canGoBack)),
+          message: buildMessage(
+            q.label,
+            progress,
+            controlsFor("select", canGoBack)
+          ),
           options: [
             { value: "yes", label: "Yes" },
             { value: "no", label: "No" },
@@ -298,7 +306,11 @@ const ask: Ask = async (q, preset, canGoBack, progress) => {
 
     case "select":
       return p.select({
-        message: buildMessage(q.label, progress, controlsFor("select", canGoBack)),
+        message: buildMessage(
+          q.label,
+          progress,
+          controlsFor("select", canGoBack)
+        ),
         options: augmentOptions(q, canGoBack),
         initialValue:
           (preset as string | undefined) ??

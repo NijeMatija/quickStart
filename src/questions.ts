@@ -1,9 +1,8 @@
 import { Question, Answers } from "./types.js";
 
 const arr = (a: Answers, id: string): string[] =>
-  (Array.isArray(a[id]) ? (a[id] as string[]) : []) ?? [];
+  Array.isArray(a[id]) ? (a[id] as string[]) : [];
 const has = (a: Answers, id: string, val: string) => arr(a, id).includes(val);
-const is = (a: Answers, id: string, val: unknown) => a[id] === val;
 const truthy = (a: Answers, id: string) => Boolean(a[id]);
 
 const hasAnyFrontend = (a: Answers) =>
@@ -65,7 +64,8 @@ export const questions: Question[] = [
     category: "Identity",
     type: "text",
     label: "Why now / why you? (optional)",
-    placeholder: "Trigger, insight, or personal motivation. Leave blank to skip.",
+    placeholder:
+      "Trigger, insight, or personal motivation. Leave blank to skip.",
   },
   {
     id: "projectType",
@@ -246,7 +246,7 @@ export const questions: Question[] = [
     id: "profileFields",
     category: "Users & Auth",
     type: "text",
-    label: "Extra profile fields beyond name/email? (or \"none\")",
+    label: 'Extra profile fields beyond name/email? (or "none")',
     placeholder: "avatar, bio, phone",
     defaultValue: "none",
     skipIf: (a) => !truthy(a, "hasAccounts"),
@@ -412,7 +412,10 @@ export const questions: Question[] = [
     type: "select",
     label: "Architecture?",
     options: [
-      { value: "fullstack", label: "Fullstack framework (same repo, same app)" },
+      {
+        value: "fullstack",
+        label: "Fullstack framework (same repo, same app)",
+      },
       { value: "split", label: "Separate frontend + backend services" },
       { value: "no-pref", label: "No preference — agent picks" },
     ],
@@ -650,7 +653,8 @@ export const questions: Question[] = [
     category: "Core Features",
     type: "text",
     label: "Describe the primary user journey in one sentence.",
-    placeholder: "User signs up, imports a CSV, gets a dashboard, invites team.",
+    placeholder:
+      "User signs up, imports a CSV, gets a dashboard, invites team.",
     required: true,
   },
   {
@@ -852,7 +856,7 @@ export const questions: Question[] = [
     id: "otherApis",
     category: "Integrations",
     type: "text",
-    label: "Other third-party APIs to integrate? (comma-separated or \"none\")",
+    label: 'Other third-party APIs to integrate? (comma-separated or "none")',
     placeholder: "Calendar, Slack, Notion, Linear, etc.",
     defaultValue: "none",
   },
@@ -881,7 +885,10 @@ export const questions: Question[] = [
     type: "select",
     label: "Design aesthetic?",
     options: [
-      { value: "minimal-flat", label: "Minimal / flat (Linear, Stripe, Vercel)" },
+      {
+        value: "minimal-flat",
+        label: "Minimal / flat (Linear, Stripe, Vercel)",
+      },
       { value: "playful", label: "Playful / friendly" },
       { value: "bold", label: "Bold / high-contrast" },
       { value: "corporate", label: "Corporate / enterprise" },
@@ -1217,7 +1224,7 @@ export const questions: Question[] = [
     id: "dataRetention",
     category: "Ops",
     type: "text",
-    label: "Data retention / deletion policy? (or \"none\")",
+    label: 'Data retention / deletion policy? (or "none")',
     placeholder: "Delete user data within 30 days of account deletion, etc.",
     defaultValue: "none",
   },
@@ -1225,7 +1232,7 @@ export const questions: Question[] = [
     id: "forbiddenTech",
     category: "Ops",
     type: "text",
-    label: "Any technologies to explicitly avoid? (or \"none\")",
+    label: 'Any technologies to explicitly avoid? (or "none")',
     placeholder: "e.g. no MongoDB, no Firebase, no Java",
     defaultValue: "none",
   },

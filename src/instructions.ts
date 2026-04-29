@@ -10,10 +10,7 @@ const get = (a: Answers, id: string, fallback = ""): string => {
 };
 const bool = (a: Answers, id: string) => a[id] === true;
 
-export function generateInstructions(
-  a: Answers,
-  target: AgentTarget
-): string {
+export function generateInstructions(a: Answers, target: AgentTarget): string {
   const name = get(a, "name", "this project");
   const tagline = get(a, "tagline");
   const agentName = AGENT_META[target].name;
@@ -55,7 +52,7 @@ When anything here conflicts with SPEC.md, SPEC.md wins.
 
 ## Stack at a Glance
 
-${stackSummary || "_See SPEC.md \"Tech Stack\" section._"}
+${stackSummary || '_See SPEC.md "Tech Stack" section._'}
 
 ${bool(a, "dbNeeded") ? `Database: ${get(a, "dbType")}${get(a, "dbHosting") && get(a, "dbHosting") !== "undecided" ? ` on ${get(a, "dbHosting")}` : ""}.` : "No database."}
 ${get(a, "hosting") && get(a, "hosting") !== "undecided" ? `Hosting: ${get(a, "hosting")}.` : ""}
