@@ -116,8 +116,15 @@ describe("generateSpec", () => {
   it("includes a Tech Stack section", () => {
     const spec = generateSpec(baseAnswers);
     expect(spec).toContain("## Tech Stack");
-    expect(spec).toContain("typescript");
-    expect(spec).toContain("nextjs");
+    expect(spec).toContain("TypeScript");
+    expect(spec).toContain("Next.js (App Router)");
+  });
+
+  it("renders option labels in human-facing sections", () => {
+    const spec = generateSpec(baseAnswers);
+    expect(spec).toContain("- **Targets:** Web app");
+    expect(spec).toContain("- **Testing:** Vitest (unit)");
+    expect(spec).toContain("- **Environments:** Production + staging");
   });
 
   it("includes a Suggested Build Order section", () => {

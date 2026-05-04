@@ -181,6 +181,7 @@ export const questions: Question[] = [
       { value: "sso-saml", label: "SSO / SAML" },
     ],
     defaultValue: ["email-password", "google"],
+    required: true,
     skipIf: (a) => !truthy(a, "hasAccounts"),
   },
   {
@@ -270,6 +271,7 @@ export const questions: Question[] = [
       { value: "api-only", label: "API only (no UI)" },
     ],
     defaultValue: ["web"],
+    required: true,
     allowCustom: false,
   },
   {

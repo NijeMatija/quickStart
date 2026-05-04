@@ -1,16 +1,31 @@
 import { Answers } from "./types.js";
 import { estimateCosts, formatCostEstimate } from "./pricing.js";
+import { questions } from "./questions.js";
+
+const optionLabels = new Map(
+  questions.map((q) => [
+    q.id,
+    new Map((q.options ?? []).map((o) => [o.value, o.label])),
+  ])
+);
 
 const get = (a: Answers, id: string, fallback = ""): string => {
   const v = a[id];
   if (v === undefined || v === null || v === "") return fallback;
-  if (Array.isArray(v)) return v.length ? v.join(", ") : fallback;
+  const labels = optionLabels.get(id);
+  const display = (value: string) => labels?.get(value) ?? value;
+  if (Array.isArray(v)) return v.length ? v.map(display).join(", ") : fallback;
   if (typeof v === "boolean") return v ? "Yes" : "No";
-  return String(v);
+  return display(String(v));
 };
 
 const bool = (a: Answers, id: string) => a[id] === true;
 const skipped = (a: Answers, id: string) => !(id in a);
+const raw = (a: Answers, id: string): string => {
+  const v = a[id];
+  if (v === undefined || v === null || Array.isArray(v)) return "";
+  return String(v);
+};
 
 const bullet = (label: string, value: string) =>
   value ? `- **${label}:** ${value}` : "";
@@ -205,19 +220,20 @@ function buildOrder(a: Answers): string {
   let n = 1;
 
   const stack = [
-    get(a, "frontendFramework"),
-    get(a, "backendFramework"),
-    get(a, "languagePref"),
-  ]
-    .filter((s) => s && s !== "no-pref")
-    .join(" + ");
+    raw(a, "frontendFramework") !== "no-pref" ? get(a, "frontendFramework") : "",
+    raw(a, "backendFramework") !== "no-pref" ? get(a, "backendFramework") : "",
+    raw(a, "languagePref") !== "no-pref" ? get(a, "languagePref") : "",
+  ].filter(Boolean).join(" + ");
   steps.push(
     `${n++}. **Scaffold** the project${stack ? ` using ${stack}` : ""}. Configure ${get(a, "packageManager") || "package manager"}, ${get(a, "codeQuality") || "linting"}, and TypeScript.`
   );
 
   if (bool(a, "dbNeeded")) {
-    const dbBits = [get(a, "dbType"), get(a, "orm")]
-      .filter((s) => s && s !== "no-pref")
+    const dbBits = [
+      raw(a, "dbType") !== "no-pref" ? get(a, "dbType") : "",
+      raw(a, "orm") !== "no-pref" ? get(a, "orm") : "",
+    ]
+      .filter(Boolean)
       .join(" + ");
     steps.push(
       `${n++}. **Set up the database** (${dbBits || "per spec"}). Define schema for the core entities, run initial migration${bool(a, "seedData") ? ", seed dev data" : ""}.`
@@ -251,10 +267,10 @@ function buildOrder(a: Answers): string {
   }
 
   const integ = [
-    get(a, "emailProvider"),
-    get(a, "analytics"),
-    get(a, "errorTracking"),
-  ].filter((v) => v && v !== "none");
+    raw(a, "emailProvider") !== "none" ? get(a, "emailProvider") : "",
+    raw(a, "analytics") !== "none" ? get(a, "analytics") : "",
+    raw(a, "errorTracking") !== "none" ? get(a, "errorTracking") : "",
+  ].filter(Boolean);
   if (integ.length) {
     steps.push(`${n++}. **Integrations.** Wire up ${integ.join(", ")}.`);
   }
@@ -266,7 +282,7 @@ function buildOrder(a: Answers): string {
   }
 
   const hosting = get(a, "hosting");
-  if (hosting && hosting !== "undecided") {
+  if (hosting && raw(a, "hosting") !== "undecided") {
     steps.push(
       `${n++}. **Deploy.** ${hosting}${bool(a, "previewDeploys") ? " with PR preview deployments" : ""}. Set up ${get(a, "environments", "prod")} environments.`
     );

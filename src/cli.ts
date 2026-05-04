@@ -35,6 +35,25 @@ const VERSION: string = (() => {
   }
 })();
 
+function renderHelp() {
+  console.log(`quickStart${VERSION ? ` v${VERSION}` : ""}
+
+Turn a product idea into SPEC.md plus AI-agent instruction files.
+
+Usage:
+  quickstart
+  quickstart --help
+  quickstart --version
+
+Options:
+  -h, --help       Show this help message
+  -v, --version    Show the installed version
+
+Environment:
+  ANTHROPIC_API_KEY  Enable optional Claude-powered smart pre-fill
+`);
+}
+
 // ASCII banner shown at the start of every run. Uses "ANSI Shadow" style
 // block characters for the wordmark + a lightning tagline below. Width is
 // ~82 chars — fits modern terminals comfortably; narrow terminals (<82
@@ -390,7 +409,15 @@ function cancel() {
   process.exit(0);
 }
 
-main().catch((err) => {
-  p.cancel(err instanceof Error ? err.message : String(err));
-  process.exit(1);
-});
+const args = process.argv.slice(2);
+
+if (args.includes("--help") || args.includes("-h")) {
+  renderHelp();
+} else if (args.includes("--version") || args.includes("-v")) {
+  console.log(VERSION);
+} else {
+  main().catch((err) => {
+    p.cancel(err instanceof Error ? err.message : String(err));
+    process.exit(1);
+  });
+}

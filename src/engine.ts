@@ -128,6 +128,16 @@ export async function runQuestions(
       finalValue = typed;
     }
 
+    if (
+      q.type === "multiselect" &&
+      q.required &&
+      Array.isArray(finalValue) &&
+      finalValue.length === 0
+    ) {
+      p.note(color.yellow("Select at least one option."), "Required");
+      continue;
+    }
+
     answers[q.id] = finalValue;
     askedStack.push(q.id);
     askedCount++;
@@ -150,6 +160,7 @@ async function promptForCustomList(q: Question): Promise<string[] | symbol> {
         : undefined,
   });
   if (p.isCancel(raw)) return raw;
+  if ((raw as string).trim() === "/skip") return [];
   const parts = (raw as string)
     .split(",")
     .map((s) => s.trim())
@@ -329,7 +340,7 @@ const ask: Ask = async (q, preset, canGoBack, progress) => {
           (preset as string[] | undefined) ??
           (q.defaultValue as string[] | undefined) ??
           [],
-        required: false,
+        required: q.required ?? false,
       });
   }
 };

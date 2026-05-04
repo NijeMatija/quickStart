@@ -5,11 +5,8 @@
 ### Turn a product idea into an AI-agent-ready spec in 5 minutes.
 
 [![npm version](https://img.shields.io/npm/v/quickstart-ai.svg?style=flat-square&color=14b8a6)](https://www.npmjs.com/package/quickstart-ai)
-[![npm downloads](https://img.shields.io/npm/dw/quickstart-ai.svg?style=flat-square&color=14b8a6)](https://www.npmjs.com/package/quickstart-ai)
-[![node](https://img.shields.io/badge/node-%E2%89%A518-14b8a6?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![npm downloads](https://img.shields.io/npm/dt/quickstart-ai.svg?style=flat-square&label=downloads&color=14b8a6)](https://www.npmjs.com/package/quickstart-ai)
 [![license](https://img.shields.io/github/license/NijeMatija/quickStart?style=flat-square&color=14b8a6)](./LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Built for AI coding agents](https://img.shields.io/badge/built%20for-AI%20coding%20agents-9333ea?style=flat-square)](#which-agents-are-supported)
 [![Buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-00457C?style=flat-square&logo=paypal&logoColor=white)](https://paypal.me/matijaaa)
 
 **Interview → `SPEC.md` + agent instructions → hand it to your coding agent.**

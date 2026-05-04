@@ -8,13 +8,15 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "title.svg",
+    "demo.svg"
   ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/cli.ts",
     "start": "node dist/cli.js",
-    "test": "vitest run",
+    "test": "vitest run --pool=threads --maxWorkers=1",
     "test:watch": "vitest",
     "lint": "eslint src tests",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
