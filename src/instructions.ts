@@ -72,6 +72,7 @@ Then work through the "Suggested Build Order" in SPEC.md — one step at a time,
 - **Default to no comments.** Let well-named identifiers speak. Only comment when the *why* is non-obvious (subtle invariant, workaround, hidden constraint).
 - **Ask before deviating.** If the spec leaves a choice as "no preference" or "undecided", propose 1–2 options before implementing.
 ${bool(a, "hasAccounts") ? "- **Auth is real.** Treat auth like production from day one: never log credentials, always verify on the server, use HTTP-only cookies for sessions." : ""}
+${a.technicalLevel === "nontechnical" ? "- **Explain technical choices plainly.** The user chose non-technical mode, so propose stack/deploy options in plain language before making big implementation decisions." : ""}
 ${get(a, "forbiddenTech") && get(a, "forbiddenTech") !== "none" ? `- **Do not use:** ${get(a, "forbiddenTech")}.` : ""}
 
 ## Verifying Your Work

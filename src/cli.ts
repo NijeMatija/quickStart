@@ -20,6 +20,13 @@ import { smartFill, SmartFillError } from "./smart.js";
 import { Answers } from "./types.js";
 import { Depth, DEPTH_OPTIONS, filterByDepth } from "./depth.js";
 import { estimateCosts } from "./pricing.js";
+import {
+  defaultsForTechnicalLevel,
+  filterByTechnicalLevel,
+  normalizeTechnicalLevel,
+  TechnicalLevel,
+  TECHNICAL_LEVEL_OPTIONS,
+} from "./technical.js";
 
 // Read version from package.json at runtime so the banner stays in sync
 // with whatever npm actually installed.
@@ -115,6 +122,7 @@ interface SavedSession {
   outDir: string;
   selectedAgents: AgentTarget[];
   depth: Depth;
+  technicalLevel: TechnicalLevel;
   answers: Answers;
   askedStack: string[];
   index: number;
@@ -129,6 +137,9 @@ function loadSavedSession(): SavedSession | null {
     if (!Array.isArray(raw.selectedAgents)) return null;
     if (!Array.isArray(raw.askedStack)) return null;
     if (typeof raw.index !== "number") return null;
+    raw.technicalLevel = normalizeTechnicalLevel(
+      raw.technicalLevel ?? raw.answers?.technicalLevel
+    );
     return raw as SavedSession;
   } catch {
     return null;
@@ -189,6 +200,7 @@ async function main() {
         "",
         `Target folder: ${color.cyan(saved.targetDirInput)}`,
         `Depth: ${color.cyan(saved.depth)}`,
+        `Technical level: ${color.cyan(saved.technicalLevel)}`,
         `Agents: ${color.cyan(saved.selectedAgents.join(", "))}`,
         `Questions answered: ${color.green(String(saved.askedStack.length))}`,
       ].join("\n"),
@@ -222,6 +234,7 @@ async function main() {
   let outDir: string;
   let selectedAgents: AgentTarget[];
   let depth: Depth;
+  let technicalLevel: TechnicalLevel;
   let defaults: Answers = {};
   let resumeState: ProgressSnapshot | undefined;
 
@@ -230,6 +243,7 @@ async function main() {
     outDir = session.outDir;
     selectedAgents = session.selectedAgents;
     depth = session.depth;
+    technicalLevel = session.technicalLevel;
     resumeState = {
       answers: session.answers,
       askedStack: session.askedStack,
@@ -274,6 +288,15 @@ async function main() {
     if (p.isCancel(depthChoice)) return cancel();
     depth = depthChoice as Depth;
 
+    const technicalLevelChoice = await p.select({
+      message: "How technical should the interview be?",
+      options: TECHNICAL_LEVEL_OPTIONS,
+      initialValue: "guided" as TechnicalLevel,
+    });
+    if (p.isCancel(technicalLevelChoice)) return cancel();
+    technicalLevel = normalizeTechnicalLevel(technicalLevelChoice);
+    defaults = defaultsForTechnicalLevel(technicalLevel);
+
     // Smart-fill (optional)
     const hasApiKey = Boolean(process.env.ANTHROPIC_API_KEY);
 
@@ -299,9 +322,16 @@ async function main() {
         s.start("Asking Claude to draft answers");
         try {
           // Filter first so smart-fill only drafts questions we'll actually ask.
-          const filtered = filterByDepth(questions, depth);
+          const filtered = filterByTechnicalLevel(
+            filterByDepth(questions, depth),
+            technicalLevel
+          );
           const result = await smartFill(desc as string, filtered);
-          defaults = result.answers;
+          defaults = {
+            ...defaultsForTechnicalLevel(technicalLevel),
+            ...result.answers,
+            technicalLevel,
+          };
           s.stop(
             `Pre-filled ${color.green(String(result.filledCount))} answers${
               result.skippedKeys.length
@@ -332,7 +362,10 @@ async function main() {
   }
 
   // Filter to selected depth and run interview
-  const filteredQuestions = filterByDepth(questions, depth);
+  const filteredQuestions = filterByTechnicalLevel(
+    filterByDepth(questions, depth),
+    technicalLevel
+  );
 
   const saveSnapshot = (snap: ProgressSnapshot) => {
     writeProgress({
@@ -342,6 +375,7 @@ async function main() {
       outDir,
       selectedAgents,
       depth,
+      technicalLevel,
       answers: snap.answers,
       askedStack: snap.askedStack,
       index: snap.index,

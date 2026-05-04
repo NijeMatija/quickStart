@@ -47,8 +47,9 @@ That's it. Answer the questions. Drop the folder into Claude Code, Cursor, Winds
 
 1. **Pick your agent(s).** Claude Code, Cursor, Windsurf, Copilot, Aider, or a vendor-neutral `AGENTS.md`. Select one or many.
 2. *(Optional)* **Smart pre-fill.** If `ANTHROPIC_API_KEY` is set, paste a 2–5 sentence description and Claude drafts the answers for you. You still step through each one — accept, edit, or override.
-3. **10-section interview.** Branching questions across Identity, Users & Auth, Platforms, Stack, Data, Core Features, Integrations, Design, Deploy, Ops. Irrelevant sections skip themselves (no DB questions if you said no database; no mobile questions if you said web-only).
-4. **Two files get written.** `SPEC.md` (the product spec) and one correctly-named instruction file per agent you selected.
+3. **Choose your comfort level.** Non-technical mode asks product questions in plain English and lets your agent pick stack/deploy details. Technical mode keeps every knob.
+4. **10-section interview.** Branching questions across Identity, Users & Auth, Platforms, Stack, Data, Core Features, Integrations, Design, Deploy, Ops. Irrelevant sections skip themselves (no DB questions if you said no database; no mobile questions if you said web-only).
+5. **Two files get written.** `SPEC.md` (the product spec) and one correctly-named instruction file per agent you selected.
 
 ## 📦 Output
 
@@ -132,8 +133,6 @@ MIT — do whatever you want. Attribution appreciated but not required.
 ---
 
 <div align="center">
-
-Built with ❤️ and [Claude](https://www.anthropic.com/claude).
 
 If this saved you time, a ⭐ on GitHub would mean a lot —
 and if it saved you a *lot* of time, you can [☕ buy me a coffee](https://paypal.me/matijaaa).
